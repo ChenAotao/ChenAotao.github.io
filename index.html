@@ -138,6 +138,121 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Linux下安装Mysql" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/28/Linux%E4%B8%8B%E5%AE%89%E8%A3%85Mysql/">Linux下安装Mysql</a>
+    </h1>
+  
+
+        
+        <a href="/2020/06/28/Linux%E4%B8%8B%E5%AE%89%E8%A3%85Mysql/" class="archive-article-date">
+  	<time datetime="2020-06-28T01:21:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h2><p>相信很多小伙伴都和我一样,欢欢喜喜的购买了云服务器,却被各种软件安装弄得焦头烂额<br>这篇文章记录一下我的安装过程<br>第一次的安装过程我也是参考了大量的其他博主的博文,也遇到了一些问题<br>此篇博客就当做个记录,方便自己也方便他人</p>
+<hr>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h3><p>注意: 此篇文章适用于mysql-5.7.24！！！其他版本请自行搜索对应版本解决方案</p>
+<p>下载安装包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment">#  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz</span></span><br></pre></td></tr></table></figure>
+
+<p>如果之前有安装过其他版本的mysql,可以自行搜索一下彻底删除的解决方案</p>
+<h3 id="安装mysql"><a href="#安装mysql" class="headerlink" title="安装mysql"></a>安装mysql</h3><p>找到已下载的安装包mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz</p>
+<p>执行解压命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment"># tar xzvf mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz</span></span><br><span class="line">[root@localhost /]<span class="comment"># ls</span></span><br><span class="line">mysql-5.7.24-linux-glibc2.12-x86_64</span><br><span class="line">mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>Liunx环境不同可能会导致安装包位置不同,或者可去官网下载对应压缩包,放入指定目录</p>
+<p>解压完成后，可以看到当前目录下多了一个解压文件<br>移动该文件到/usr/local/下,并将文件夹名称修改为mysql</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment"># mv mysql-5.7.24-linux-glibc2.12-x86_64 /usr/local/</span></span><br><span class="line">[root@localhost /]<span class="comment"># cd /usr/local/</span></span><br><span class="line">[root@localhost /]<span class="comment"># mv mysql-5.7.24-linux-glibc2.12-x86_64 mysql</span></span><br></pre></td></tr></table></figure>
+
+<p>创建data目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment"># mkdir /usr/local/mysql/data</span></span><br></pre></td></tr></table></figure>
+
+<p>更改mysql目录下所有的目录及文件夹所属的用户组和用户，以及权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment"># chown -R mysql:mysql /usr/local/mysql</span></span><br><span class="line">[root@localhost /]<span class="comment"># chmod -R 755 /usr/local/mysql</span></span><br></pre></td></tr></table></figure>
+
+<p>执行编译安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment"># cd /usr/local/mysql/bin</span></span><br><span class="line">[root@localhost bin]<span class="comment"># ./mysqld --initialize --user=mysql --datadir=/usr/local/mysql/data --basedir=/usr/local/mysql</span></span><br></pre></td></tr></table></figure>
+
+<p>!!!<br>记录日志最末尾位置root@localhost:后的字符串，此字符串为mysql管理员临时登录密码<br>!!!</p>
+<p>修改对应配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost bin]<span class="comment">#  vi /etc/my.cnf</span></span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line">datadir=/usr/<span class="built_in">local</span>/mysql/data</span><br><span class="line">port=3306</span><br><span class="line">sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES</span><br><span class="line">symbolic-links=0</span><br><span class="line">max_connections=600</span><br><span class="line">innodb_file_per_table=1</span><br><span class="line">lower_case_table_names=1</span><br></pre></td></tr></table></figure>
+
+<p>测试安装结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment"># /usr/local/mysql/support-files/mysql.server start</span></span><br></pre></td></tr></table></figure>
+
+<p>如果出现OK即代表安装完成</p>
+<p>如果出现如下错误</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Starting MySQL... ERROR! The server quit without updating PID file</span><br></pre></td></tr></table></figure>
+
+<p>查看是否存在mysql和mysqld的服务，如果存在，则结束进程，再重新执行启动命令</p>
+<p>添加软连接并重启服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment">#  ln -s /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql </span></span><br><span class="line">[root@localhost /]<span class="comment">#  ln -s /usr/local/mysql/bin/mysql /usr/bin/mysql</span></span><br><span class="line">[root@localhost /]<span class="comment">#  service mysql restart</span></span><br></pre></td></tr></table></figure>
+
+<p>登录Mysql并修改密码,密码为之前记录的临时密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment">#  mysql -u root -p</span></span><br><span class="line">Enter password:</span><br><span class="line">mysql&gt;<span class="built_in">set</span> password <span class="keyword">for</span> root@localhost = password(<span class="string">'yourpass'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>开放远程连接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;use mysql;</span><br><span class="line">msyql&gt;update user <span class="built_in">set</span> user.Host=<span class="string">'%'</span> <span class="built_in">where</span> user.User=<span class="string">'root'</span>;</span><br><span class="line">mysql&gt;flush privileges;</span><br></pre></td></tr></table></figure>
+
+<p>设置开机自启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1、将服务文件拷贝到init.d下，并重命名为mysql</span><br><span class="line">[root@localhost /]<span class="comment"># cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld</span></span><br><span class="line">2、赋予可执行权限</span><br><span class="line">[root@localhost /]<span class="comment"># chmod +x /etc/init.d/mysqld</span></span><br><span class="line">3、添加服务</span><br><span class="line">[root@localhost /]<span class="comment"># chkconfig --add mysqld</span></span><br><span class="line">4、显示服务列表</span><br><span class="line">[root@localhost /]<span class="comment"># chkconfig --list</span></span><br></pre></td></tr></table></figure>
+
+<p>如果你到达这步了,那就代表安装完成</p>
+<p>使用navicat开始连接</p>
+<p>如果出现连接失败的情况<br>请检查云服务器安全组是否开放3389端口</p>
+<hr>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>服务器环境搭建及项目部署一直是初学者的痛,我也不例外,所以这篇文章的主要目的也是为了分享一下<br>我自己成功的经历,希望能帮助到更多的人<br>非常感谢能看到这里<br>peace &amp; love</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/28/Linux%E4%B8%8B%E5%AE%89%E8%A3%85Mysql/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JavaHashmap底层原理笔记" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
